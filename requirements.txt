@@ -1,0 +1,8 @@
+numpy
+torch
+torchvision
+lightning
+icecream
+jupyter
+optuna
+pillow
