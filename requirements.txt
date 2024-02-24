@@ -6,3 +6,4 @@ icecream
 jupyter
 optuna
 pillow
+matplotlib
