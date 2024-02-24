@@ -1,0 +1,27 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  ImagePredictionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: "./"
+      Handler: app.lambda_handler  # Ensure this points to your prediction handler
+      Runtime: python3.10
+      Architectures:
+        - x86_64
+      Events:
+        PredictImage:
+          Type: Api
+          Properties:
+            Path: /predict
+            Method: post
+            RestApiId:
+              Ref: MyApi
+  MyApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Cors:
+        AllowMethods: "'POST'"
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+        AllowOrigin: "'*'"
