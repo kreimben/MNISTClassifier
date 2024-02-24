@@ -1,5 +1,7 @@
 .idea/
 data/
+*.ckpt
+lightning_logs/
 
 ### Python template
 # Byte-compiled / optimized / DLL files
