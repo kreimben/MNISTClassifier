@@ -21,7 +21,7 @@ warm_containers = "EAGER"
 watch = false
 
 [default.deploy.parameters]
-resolve_s3 = true
+#resolve_s3 = true
 s3_bucket = "number-classifier"
 #s3_prefix = "number-classifier"
 region = "ap-northeast-2"
