@@ -7,3 +7,4 @@ jupyter
 optuna
 pillow
 matplotlib
+zappa

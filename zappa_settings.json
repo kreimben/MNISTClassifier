@@ -1,0 +1,19 @@
+{
+  "production": {
+    "app_function": "app.lambda_handler",
+    "aws_region": "ap-northeast-2",
+    "profile_name": "default",
+    "project_name": "mnistclassifier",
+    "runtime": "python3.10",
+    "s3_bucket": "kreimben-general-bucket",
+    "exclude": [
+      ".aws-sam",
+      "venv",
+      ".git",
+      "torch",
+      "notebook",
+      "lightning_logs",
+      "*.ckpt"
+    ]
+  }
+}
