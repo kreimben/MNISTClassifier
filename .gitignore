@@ -3,6 +3,8 @@ data/
 *.ckpt
 lightning_logs/
 .aws-sam/
+docker_build_push_ecr_accessKeys.csv
+build.sh
 
 ### Python template
 # Byte-compiled / optimized / DLL files
