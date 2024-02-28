@@ -1,0 +1,12 @@
+version = 0.1
+
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "mnist-classifier"  # Updated to follow AWS naming conventions
+s3_bucket = ""  # Intentionally left blank if not using S3 for deployment artifacts
+resolve_s3 = false  # Disables automatic S3 bucket resolution
+region = "ap-northeast-2"  # Specify your AWS region
+capabilities = "CAPABILITY_IAM"
+image_repository = "016538895551.dkr.ecr.ap-northeast-2.amazonaws.com/mnist_classifier"  # Specify your ECR repository
+image_tag = "latest"  # Specify your Docker image tag

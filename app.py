@@ -6,23 +6,34 @@ import torch
 from PIL import Image
 from torchvision import transforms
 
-# Load model globally
-model = torch.jit.load('scripted_model.pt')
+from src.module import ResNet, ResidualBlock
+
+model = ResNet.load_from_checkpoint('mnist.ckpt',
+                                    block=ResidualBlock, layers=[2, 2, 2, 2], grayscale=True, batch_size=128)
 model.eval()
 
 # Define your transform pipeline
 transform = transforms.Compose([
-    transforms.Resize(256),
-    transforms.CenterCrop(224),
-    transforms.ToTensor(),
-    # transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+    transforms.Resize(28),
+    transforms.ToTensor()
 ])
 
 
 def lambda_handler(event, context):
+    print(f'Received event: {json.dumps(event)}')
+    global model
+    print(f'after loading model: {json.dumps(model)}')
+
     try:
         # Decode the image
-        image_data = event['body']
+        body = json.loads(event['body'])
+        if body is None:
+            return json.dumps({'error': 'There are no body. please input a valid image throgh your request.'})
+
+        if body['image'] is None:
+            return json.dumps({'error': 'There are no image. please input a valid image throgh your request.'})
+
+        image_data = body['image']
         image_decoded = base64.b64decode(image_data)
         image = Image.open(BytesIO(image_decoded))
 
@@ -37,12 +48,12 @@ def lambda_handler(event, context):
         # For example, convert tensor to JSON serializable output
         prediction_result = prediction.argmax().item()
 
-        return {
+        return json.dumps({
             'statusCode': 200,
-            'body': json.dumps({'prediction': prediction_result})
-        }
+            'body': {'prediction': prediction_result}
+        })
     except Exception as e:
-        return {
+        return json.dumps({
             'statusCode': 400,
-            'body': e
-        }
+            'body': f'{e}'
+        })

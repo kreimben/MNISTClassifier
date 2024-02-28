@@ -49,6 +49,8 @@ class ResNet(L.LightningModule):
 
     def __init__(self, block, layers, grayscale, learning_rate: float = 1e-5, batch_size: int = 64):
         super().__init__()
+        self.save_hyperparameters()
+
         self.learning_rate = learning_rate
         self.batch_size = batch_size
         self.inplanes = 64
