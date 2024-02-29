@@ -1,6 +1,12 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: ECR에 있는 Docker 이미지를 사용하는 Lambda 함수 예제
+
+Globals:
+  Api:
+    Cors:
+      AllowMethods: "'POST,OPTIONS'"
+      AllowHeaders: "'content-type'"
+      AllowOrigin: "'*'"
 
 Resources:
   MnistClassifier:
@@ -9,9 +15,9 @@ Resources:
       PackageType: Image
       Architectures:
         - x86_64
-      ImageUri: 016538895551.dkr.ecr.ap-northeast-2.amazonaws.com/mnist_classifier:latest
-      Timeout: 300 # 함수 타임아웃 설정 (초 단위)
-      MemorySize: 2048
+      ImageUri: 016538895551.dkr.ecr.ap-northeast-2.amazonaws.com/mnist_classifier:20240229
+      Timeout: 60 # 함수 타임아웃 설정 (초 단위)
+      MemorySize: 1024
       Events:
         predict:
           # AWS Gateway의 REST API를 생성

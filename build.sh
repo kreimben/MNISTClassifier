@@ -29,3 +29,7 @@ docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY_NA
 docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY_NAME:latest
 
 echo "Image pushed to ECR successfully."
+
+# Clean up the build results.
+docker buildx prune
+docker rmi -f $(docker images -aq)
