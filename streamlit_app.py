@@ -29,6 +29,7 @@ def load_model():
     return model
 
 
+download_from_s3()
 model = load_model()
 
 st.title("손글씨 **숫자** 예측 딥러닝 모델")
