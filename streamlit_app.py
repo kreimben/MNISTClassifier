@@ -1,3 +1,6 @@
+import os
+
+import boto3
 import numpy as np
 import streamlit as st
 import torch
@@ -8,7 +11,16 @@ from src.module import ResNet
 from src.transform import transform
 
 
-# load model
+@st.cache_resource
+def download_from_s3():
+    s3 = boto3.client(
+        's3',
+        aws_access_key_id=os.getenv('BOTO_ACCESS_KEY'),
+        aws_secret_access_key=os.getenv('BOTO_SECRET_KEY'),
+        region_name='ap-northeast-2'
+    )
+    s3.download_file('kreimben-general-bucket', 'trained_models/mnist_data/mnist.ckpt', 'mnist.ckpt')
+
 
 @st.cache_resource
 def load_model():
