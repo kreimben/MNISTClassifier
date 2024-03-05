@@ -29,7 +29,8 @@ def load_model():
     return model
 
 
-download_from_s3()
+if 'mnist.ckpt' not in os.listdir('./'):
+    download_from_s3()
 model = load_model()
 
 st.title("손글씨 **숫자** 예측 딥러닝 모델")
@@ -45,9 +46,9 @@ canvas_result = st_canvas(
     key="full_app",
 )
 
-# Do something interesting with the image data and paths
-if canvas_result.image_data is not None:
-    image = Image.fromarray(np.uint8(canvas_result.image_data)).convert('RGB')
+
+def predict(image_data):
+    image = Image.fromarray(np.uint8(image_data)).convert('RGB')
 
     # Preprocess the image
     image_tensor = transform(image).unsqueeze(0)  # Add batch dimension
@@ -60,7 +61,7 @@ if canvas_result.image_data is not None:
 
     st.write(f'예측 결과: {prediction_result}입니다.')
 
-    # if st.checkbox('틀렸나요?'):
-    #     st.write()
-    #     right = st.radio('원래 정답은 뭐였나요?', [str(i) for i in range(10)])
-    #     st.write(right)
+
+# Do something interesting with the image data and paths
+if canvas_result.image_data is not None:
+    st.button('예측하기', on_click=lambda: predict(canvas_result.image_data))
