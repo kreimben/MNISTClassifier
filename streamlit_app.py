@@ -19,7 +19,7 @@ def download_from_s3():
         aws_secret_access_key=os.getenv('BOTO_SECRET_KEY'),
         region_name='ap-northeast-2'
     )
-    s3.download_file('kreimben-general-bucket', 'trained_models/mnist_data/mnist.ckpt', 'mnist.ckpt')
+    s3.download_file('kreimben-general-bucket', 'trained_models/mnist_classifier/mnist.ckpt', 'mnist.ckpt')
 
 
 @st.cache_resource
