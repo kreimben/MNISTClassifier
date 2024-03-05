@@ -4,7 +4,7 @@ torchvision
 lightning
 icecream
 jupyter
-optuna
 pillow
 matplotlib
-zappa
+streamlit
+streamlit-drawable-canvas
