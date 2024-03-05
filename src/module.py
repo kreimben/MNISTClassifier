@@ -42,8 +42,7 @@ class ResidualBlock(nn.Module):
 
 
 class ResNet(L.LightningModule):
-    def __init__(self, block, layers, num_classes=10, grayscale=False, learning_rate: float = 1e-5,
-                 batch_size: int = 128, device='cpu'):
+    def __init__(self, block, layers, batch_size=2 ** 10, learning_rate=1e-5, device='cpu'):
         super(ResNet, self).__init__()
         self.save_hyperparameters()
 
@@ -52,23 +51,12 @@ class ResNet(L.LightningModule):
         self.transform = transforms.Compose([
             transforms.ToTensor(),
         ])
-        self.learning_rate = learning_rate
-        self.batch_size = batch_size
-        self.accuracy = Accuracy('multiclass', num_classes=num_classes)
-        self.dataset_hp = {
-            'pin_memory': True,
-            'batch_size': self.hparams.batch_size,
-            'num_workers': os.cpu_count() - 1,
-            'generator': torch.Generator(device=device),
-            'persistent_workers': True,
-        }
+        self.num_classes = 10
+        self.accuracy = Accuracy('multiclass', num_classes=self.num_classes)
+        self.set_device = device
+        self.in_dim = 1  # cuz it's gray scale!
 
-        if grayscale:
-            in_dim = 1
-        else:
-            in_dim = 3
-
-        self.conv1 = nn.Conv2d(in_dim, self.inplanes, kernel_size=7, stride=2, padding=3, bias=False)
+        self.conv1 = nn.Conv2d(self.in_dim, self.inplanes, kernel_size=7, stride=2, padding=3, bias=False)
         self.bn1 = nn.BatchNorm2d(self.inplanes)
         self.relu = nn.ReLU(inplace=True)
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
@@ -77,7 +65,7 @@ class ResNet(L.LightningModule):
         self.layer3 = self._make_layer(block, 256, layers[2], stride=2)
         self.layer4 = self._make_layer(block, 512, layers[3], stride=2)
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
-        self.fc = nn.Linear(512 * block.expansion, num_classes)
+        self.fc = nn.Linear(512 * block.expansion, self.num_classes)
 
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
@@ -85,6 +73,16 @@ class ResNet(L.LightningModule):
             elif isinstance(m, nn.BatchNorm2d):
                 nn.init.constant_(m.weight, 1)
                 nn.init.constant_(m.bias, 0)
+
+    @property
+    def dataset_hp(self):
+        return {
+            'pin_memory': True,
+            'batch_size': self.hparams.batch_size,
+            'num_workers': os.cpu_count() - 1,
+            'generator': torch.Generator(device=self.set_device),
+            'persistent_workers': True,
+        }
 
     def _make_layer(self, block, planes, blocks, stride=1):
         downsample = None
