@@ -8,6 +8,8 @@ from torchmetrics import Accuracy
 from torchvision import datasets
 from torchvision.transforms import transforms
 
+from src.transform import training_transforms
+
 
 class ResidualBlock(nn.Module):
     expansion = 1
@@ -48,9 +50,7 @@ class ResNet(L.LightningModule):
 
         self.inplanes = 64
         self.loss = nn.CrossEntropyLoss()
-        self.transform = transforms.Compose([
-            transforms.ToTensor(),
-        ])
+        self.transform = training_transforms
         self.num_classes = 10
         self.accuracy = Accuracy('multiclass', num_classes=self.num_classes)
         self.set_device = device

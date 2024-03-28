@@ -8,7 +8,7 @@ from PIL import Image
 from streamlit_drawable_canvas import st_canvas
 
 from src.module import ResNet
-from src.transform import transform
+from src.transform import inference_transform
 
 
 @st.cache_resource
@@ -51,7 +51,7 @@ def predict(image_data):
     image = Image.fromarray(np.uint8(image_data)).convert('RGB')
 
     # Preprocess the image
-    image_tensor = transform(image).unsqueeze(0)  # Add batch dimension
+    image_tensor = inference_transform(image).unsqueeze(0)  # Add batch dimension
 
     # Predict
     with torch.no_grad():
