@@ -10,5 +10,5 @@ if __name__ == '__main__':
         aws_secret_access_key=os.getenv('BOTO_SECRET_KEY'),
         region_name='ap-northeast-2'
     )
-    s3.upload_file('./mnist.ckpt', 'kreimben-general-bucket',
-                   f'trained_models/mnist_classifier/mnist.ckpt')
+    s3.upload_file('./mnist.model', 'kreimben-general-bucket',
+                   f'trained_models/mnist_classifier/mnist.model')

@@ -19,17 +19,17 @@ def download_from_s3():
         aws_secret_access_key=os.getenv('BOTO_SECRET_KEY'),
         region_name='ap-northeast-2'
     )
-    s3.download_file('kreimben-general-bucket', 'trained_models/mnist_classifier/mnist.ckpt', 'mnist.ckpt')
+    s3.download_file('kreimben-general-bucket', 'trained_models/mnist_classifier/mnist.model', 'mnist.model')
 
 
 @st.cache_resource
 def load_model():
-    model = ResNet.load_from_checkpoint('mnist.ckpt')
+    model = ResNet.load_from_checkpoint('mnist.model')
     model.eval()
     return model
 
 
-if 'mnist.ckpt' not in os.listdir('./'):
+if 'mnist.model' not in os.listdir('./'):
     download_from_s3()
 model = load_model()
 
