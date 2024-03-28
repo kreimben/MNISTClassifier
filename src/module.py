@@ -44,7 +44,7 @@ class ResidualBlock(nn.Module):
 
 
 class ResNet(L.LightningModule):
-    def __init__(self, block, layers, batch_size=2 ** 10, learning_rate=1e-5, device='cpu'):
+    def __init__(self, block, layers, batch_size=2 ** 10, learning_rate=1e-5, device='cpu', quantize=False):
         super(ResNet, self).__init__()
         self.save_hyperparameters()
 
@@ -73,6 +73,9 @@ class ResNet(L.LightningModule):
             elif isinstance(m, nn.BatchNorm2d):
                 nn.init.constant_(m.weight, 1)
                 nn.init.constant_(m.bias, 0)
+
+        if quantize:
+            torch.quantization.prepare_qat(self, inplace=True)  # Prepare for QAT
 
     @property
     def dataset_hp(self):
